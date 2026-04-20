@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌸 メルカリ 利益かんたん計算ツール</title>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --pink:      #FFB7C5;
+      --pink-soft: #FFE4EC;
+      --mint:      #B5EAD7;
+      --mint-soft: #E0F8F0;
+      --lav:       #C7B8EA;
+      --lav-soft:  #EDE8FA;
+      --peach:     #FFDAB9;
+      --peach-soft:#FFF0E0;
+      --sky:       #AED9F5;
+      --sky-soft:  #E0F3FF;
+      --text:      #5A4A6A;
+      --text-light:#9B8AB0;
+      --shadow:    rgba(160,120,180,0.15);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Zen Maru Gothic','Nunito',sans-serif;
+      background: linear-gradient(135deg,#FFE4EC 0%,#EDE8FA 35%,#E0F8F0 70%,#E0F3FF 100%);
+      min-height: 100vh;
+      padding: 20px 16px 60px;
+      color: var(--text);
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before,body::after {
+      content:''; position:fixed; border-radius:50%; opacity:.22; pointer-events:none;
+      animation: float 8s ease-in-out infinite;
+    }
+    body::before { width:320px;height:320px;background:radial-gradient(circle,var(--pink),transparent 70%);top:-80px;left:-80px; }
+    body::after  { width:280px;height:280px;background:radial-gradient(circle,var(--mint),transparent 70%);bottom:-60px;right:-60px;animation-delay:-4s; }
+    @keyframes float { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-18px) scale(1.04)} }
+
+```
+.container { max-width:640px; margin:0 auto; position:relative; z-index:1; }
+
+header { text-align:center; margin-bottom:26px; animation:slideDown .6s ease both; }
+@keyframes slideDown { from{opacity:0;transform:translateY(-24px)} to{opacity:1;transform:translateY(0)} }
+.logo-emoji { font-size:50px;display:block;margin-bottom:5px;animation:bounce 2.2s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+h1 {
+  font-size:clamp(1.25rem,5vw,1.7rem); font-weight:700;
+  background:linear-gradient(135deg,#D97FA8,#9B74C9,#5BA8D8);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1.3;
+}
+.subtitle { font-size:.82rem;color:var(--text-light);margin-top:5px; }
+
+/* AD SLOTS */
+.ad-slot {
+  background:rgba(255,255,255,0.45);
+  border:2px dashed rgba(199,184,234,0.45);
+  border-radius:16px;
+  padding:10px;
+  text-align:center;
+  font-size:.7rem;
+  color:var(--text-light);
+  margin-bottom:16px;
+  min-height:80px;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* CARD */
+.card {
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(12px);
+  border-radius:24px;
+  padding:22px 20px;
+  box-shadow:0 8px 32px var(--shadow),0 2px 8px rgba(255,255,255,.6) inset;
+  margin-bottom:16px;
+  animation:fadeUp .5s ease both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.card-title {
+  display:flex;align-items:center;gap:8px;font-size:1rem;font-weight:700;
+  margin-bottom:16px;color:var(--text);
+}
+
+/* INPUTS */
+.input-group { margin-bottom:14px; }
+label { display:block;font-size:.81rem;font-weight:700;color:var(--text-light);margin-bottom:5px;letter-spacing:.03em; }
+.input-wrap { position:relative; }
+.prefix { position:absolute;top:50%;transform:translateY(-50%);left:14px;font-size:1rem;font-weight:700;color:var(--text-light);pointer-events:none; }
+input[type="number"],select {
+  width:100%;padding:12px 14px 12px 36px;border:2px solid transparent;border-radius:14px;
+  font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);
+  background:var(--pink-soft);outline:none;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+  -moz-appearance:textfield;appearance:textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance:none; }
+input[type="number"]:focus { border-color:var(--pink);background:#fff;box-shadow:0 0 0 4px rgba(255,183,197,.3); }
+select { padding:12px 14px;background:var(--sky-soft);cursor:pointer; }
+select:focus { border-color:var(--sky);background:#fff;box-shadow:0 0 0 4px rgba(174,217,245,.3); }
+.input-group.mint  input { background:var(--mint-soft); }
+.input-group.mint  input:focus { border-color:var(--mint);box-shadow:0 0 0 4px rgba(181,234,215,.35); }
+.input-group.lav   input { background:var(--lav-soft); }
+.input-group.lav   input:focus { border-color:var(--lav);box-shadow:0 0 0 4px rgba(199,184,234,.35); }
+.input-group.peach input { background:var(--peach-soft); }
+.input-group.peach input:focus { border-color:var(--peach);box-shadow:0 0 0 4px rgba(255,218,185,.35); }
+
+/* RESULT */
+.result-card { background:linear-gradient(135deg,#FFF0F6,#EDE8FA,#E0F8F0);border:2px solid rgba(255,183,197,.4); }
+.result-grid { display:grid;gap:9px; }
+.result-row {
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;border-radius:12px;font-size:.87rem;
+  background:rgba(255,255,255,.55);transition:transform .15s;
+}
+.result-row:hover { transform:scale(1.01); }
+.result-row .r-label { display:flex;align-items:center;gap:6px;color:var(--text-light);font-weight:600; }
+.result-row .r-value { font-weight:800;font-family:'Nunito',sans-serif;font-size:1rem;color:var(--text); }
+.result-row.minus .r-value { color:#E07090; }
+.result-row.plus  .r-value { color:#5BA880; }
+
+.result-big {
+  margin-top:13px;padding:18px;
+  background:linear-gradient(135deg,#FFB7C5,#C7B8EA);
+  border-radius:18px;text-align:center;
+  box-shadow:0 6px 20px rgba(199,184,234,.4);
+  position:relative;overflow:hidden;transition:transform .2s;
+}
+.result-big:hover { transform:scale(1.02); }
+.result-big::before { content:'✨';position:absolute;top:8px;right:12px;font-size:1.3rem;animation:spin 3s linear infinite; }
+@keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+.result-big .big-label { font-size:.76rem;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.08em;margin-bottom:3px; }
+.result-big .big-value {
+  font-family:'Nunito',sans-serif;font-size:clamp(2rem,8vw,2.7rem);font-weight:800;
+  color:#fff;text-shadow:0 2px 8px rgba(180,100,160,.3);transition:all .3s ease;
+}
+.result-big .big-value.negative { color:#FFE4EC; }
+.profit-bar-wrap { margin-top:8px;background:rgba(255,255,255,.3);border-radius:999px;height:9px;overflow:hidden; }
+.profit-bar { height:100%;border-radius:999px;background:linear-gradient(90deg,#fff,rgba(255,255,255,.5));transition:width .5s cubic-bezier(.22,1,.36,1);width:0%; }
+
+/* ADVICE */
+.advice-box { margin-top:12px;padding:12px 14px;border-radius:14px;font-size:.82rem;font-weight:600;line-height:1.55;display:none; }
+.advice-box.show { display:block; }
+.advice-box.good  { background:rgba(181,234,215,.4);border-left:4px solid var(--mint);color:#3A7A60; }
+.advice-box.warn  { background:rgba(255,218,185,.4);border-left:4px solid var(--peach);color:#8A5A30; }
+.advice-box.bad   { background:rgba(255,183,197,.3);border-left:4px solid var(--pink);color:#A04060; }
+
+/* TABS */
+.tabs { display:flex;gap:6px;margin-bottom:14px; }
+.tab-btn {
+  flex:1;padding:8px 4px;border:2px solid transparent;border-radius:12px;
+  font-family:'Zen Maru Gothic',sans-serif;font-size:.76rem;font-weight:700;
+  cursor:pointer;background:rgba(255,255,255,.5);color:var(--text-light);transition:all .18s;
+}
+.tab-btn.active { background:linear-gradient(135deg,var(--pink-soft),var(--lav-soft));border-color:var(--pink);color:var(--text); }
+.tab-pane { display:none; }
+.tab-pane.active { display:block; }
+
+/* SUGGEST */
+.suggest-grid { display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px; }
+.suggest-item {
+  background:rgba(255,255,255,.6);border-radius:14px;padding:11px 6px;text-align:center;
+  cursor:pointer;border:2px solid transparent;transition:all .18s;
+}
+.suggest-item:hover { border-color:var(--pink);transform:translateY(-2px);box-shadow:0 4px 12px var(--shadow); }
+.si-label { font-size:.68rem;color:var(--text-light);margin-bottom:3px; }
+.si-price { font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;color:var(--text); }
+.si-profit { font-size:.68rem;color:#5BA880;font-weight:700;margin-top:2px; }
+.si-rate   { font-size:.66rem;color:var(--text-light); }
+
+/* BREAKEVEN */
+.be-row { display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:12px;font-size:.84rem;background:rgba(255,255,255,.55);margin-bottom:8px; }
+.be-label { color:var(--text-light);font-weight:600; }
+.be-val   { font-family:'Nunito',sans-serif;font-weight:800;color:var(--text); }
+.be-note  { font-size:.73rem;color:var(--text-light);padding:0 4px;line-height:1.5; }
+
+/* BULK */
+input[type="range"] {
+  -webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:999px;
+  background:linear-gradient(90deg,var(--pink),var(--lav));outline:none;cursor:pointer;margin-top:8px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:#fff;border:3px solid var(--pink);box-shadow:0 2px 8px var(--shadow);cursor:pointer;
+}
+.bulk-display {
+  text-align:center;padding:14px;border-radius:16px;
+  background:linear-gradient(135deg,var(--mint-soft),var(--sky-soft));margin-top:10px;
+}
+.bd-count { font-family:'Nunito',sans-serif;font-size:2rem;font-weight:800;color:var(--text); }
+.bd-total { font-family:'Nunito',sans-serif;font-size:1.4rem;font-weight:800;color:#3A7A60; }
+.bd-sub   { font-size:.74rem;color:var(--text-light);margin:4px 0; }
+
+/* TIPS */
+.tips { background:rgba(255,255,255,.5);border-radius:16px;padding:14px;margin-top:12px;border-left:4px solid var(--pink); }
+.tips h3 { font-size:.84rem;font-weight:700;margin-bottom:7px;color:var(--text); }
+.tips ul { list-style:none; }
+.tips ul li { font-size:.76rem;color:var(--text-light);padding:3px 0;display:flex;align-items:flex-start;gap:6px; }
+.tips ul li::before { content:'🌸';flex-shrink:0; }
+
+.btn-reset {
+  display:block;width:100%;margin-top:18px;padding:14px;border:none;border-radius:16px;
+  background:linear-gradient(135deg,var(--pink),var(--lav));color:#fff;
+  font-family:'Zen Maru Gothic',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 16px rgba(199,184,234,.5);transition:transform .15s,box-shadow .15s;letter-spacing:.05em;
+}
+.btn-reset:hover { transform:translateY(-2px);box-shadow:0 8px 24px rgba(199,184,234,.6); }
+.btn-reset:active { transform:scale(.98); }
+
+footer { text-align:center;font-size:.72rem;color:var(--text-light);margin-top:22px;opacity:.7; }
+
+.pop { animation:pop .3s cubic-bezier(.22,1,.36,1); }
+@keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1)} }
+```
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <span class="logo-emoji">🌸</span>
+    <h1>メルカリ 利益かんたん計算ツール</h1>
+    <p class="subtitle">販売価格を入れるだけ！手数料・送料を引いた純利益が即わかる</p>
+  </header>
+
+  <!-- 広告枠（上部） -->
+
+  <div class="ad-slot">
+    <!-- Google AdSense コードをここに貼り付けてください -->
+    <span>広告スペース（レスポンシブバナー）</span>
+  </div>
+
+  <!-- ===== 入力カード ===== -->
+
+  <div class="card">
+    <div class="card-title">💰 販売情報を入力してね</div>
+
+```
+<div class="input-group">
+  <label>🏷️ 販売価格（円）</label>
+  <div class="input-wrap">
+    <span class="prefix">¥</span>
+    <input type="number" id="price" placeholder="例: 3000" min="0" oninput="calc()" />
+  </div>
+</div>
+
+<div class="input-group mint">
+  <label>📦 仕入れ値・原価（円）※任意</label>
+  <div class="input-wrap">
+    <span class="prefix">¥</span>
+    <input type="number" id="cost" placeholder="例: 500" min="0" oninput="calc()" />
+  </div>
+</div>
+
+<div class="input-group lav">
+  <label>🚚 配送方法を選んでね</label>
+  <div class="input-wrap">
+    <select id="shipping" onchange="onShipChange()">
+      <option value="0">📦 送料込み（出品者負担）¥0</option>
+      <optgroup label="らくらくメルカリ便">
+        <option value="230">📮 ネコポス ¥230</option>
+        <option value="450">📦 宅急便コンパクト ¥450</option>
+        <option value="750">📫 宅急便 60サイズ ¥750</option>
+        <option value="850">📦 宅急便 80サイズ ¥850</option>
+        <option value="1050">🏠 宅急便 100サイズ ¥1,050</option>
+        <option value="1200">📦 宅急便 120サイズ ¥1,200</option>
+        <option value="1450">🏋️ 宅急便 140サイズ ¥1,450</option>
+        <option value="1700">🛒 宅急便 160サイズ ¥1,700</option>
+      </optgroup>
+      <optgroup label="ゆうゆうメルカリ便">
+        <option value="230">✉️ ゆうパケット ¥230</option>
+        <option value="380">📫 ゆうパケットポスト ¥380</option>
+        <option value="700">📦 ゆうパック 60サイズ ¥700</option>
+        <option value="800">📦 ゆうパック 80サイズ ¥800</option>
+        <option value="1000">📦 ゆうパック 100サイズ ¥1,000</option>
+      </optgroup>
+      <optgroup label="普通郵便">
+        <option value="84">💌 手紙（84円）</option>
+        <option value="94">💌 手紙（94円）</option>
+        <option value="120">📬 定形外郵便 50g ¥120</option>
+        <option value="140">📬 定形外郵便 100g ¥140</option>
+        <option value="210">📬 定形外郵便 150g ¥210</option>
+        <option value="250">📬 定形外郵便 250g ¥250</option>
+      </optgroup>
+      <optgroup label="カスタム">
+        <option value="custom">✏️ 送料を手入力する</option>
+      </optgroup>
+    </select>
+  </div>
+</div>
+
+<div class="input-group peach" id="customShipGroup" style="display:none">
+  <label>✏️ 送料を手入力（円）</label>
+  <div class="input-wrap">
+    <span class="prefix">¥</span>
+    <input type="number" id="customShip" placeholder="例: 600" min="0" oninput="calc()" />
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ===== 結果カード ===== -->
+
+  <div class="card result-card">
+    <div class="card-title">📊 計算結果</div>
+    <div class="result-grid">
+      <div class="result-row">
+        <span class="r-label">🏷️ 販売価格</span>
+        <span class="r-value" id="r-price">¥ —</span>
+      </div>
+      <div class="result-row minus">
+        <span class="r-label">💸 メルカリ手数料（10%）</span>
+        <span class="r-value" id="r-fee">− ¥ —</span>
+      </div>
+      <div class="result-row minus">
+        <span class="r-label">🚚 送料</span>
+        <span class="r-value" id="r-ship">− ¥ —</span>
+      </div>
+      <div class="result-row minus" id="r-cost-row" style="display:none">
+        <span class="r-label">📦 原価</span>
+        <span class="r-value" id="r-cost">− ¥ —</span>
+      </div>
+    </div>
+
+```
+<div class="result-big">
+  <div class="big-label">✨ 純利益</div>
+  <div class="big-value" id="r-profit">¥ —</div>
+  <div class="profit-bar-wrap"><div class="profit-bar" id="profit-bar"></div></div>
+</div>
+
+<div class="result-row plus" style="margin-top:10px;background:rgba(181,234,215,.3)">
+  <span class="r-label">📈 利益率</span>
+  <span class="r-value" id="r-rate">— %</span>
+</div>
+
+<div class="advice-box" id="advice-box"></div>
+```
+
+  </div>
+
+  <!-- 広告枠（中段） -->
+
+  <div class="ad-slot">
+    <!-- Google AdSense コードをここに貼り付けてください -->
+    <span>広告スペース（レスポンシブ）</span>
+  </div>
+
+  <!-- ===== プラスアルファ機能 ===== -->
+
+  <div class="card">
+    <div class="card-title">🛠️ もっと稼ぐためのツール</div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('suggest')">💡 価格提案</button>
+      <button class="tab-btn" onclick="switchTab('breakeven')">📉 損益分岐</button>
+      <button class="tab-btn" onclick="switchTab('bulk')">📦 個数計算</button>
+    </div>
+
+```
+<!-- TAB: 価格提案 -->
+<div class="tab-pane active" id="tab-suggest">
+  <p style="font-size:.77rem;color:var(--text-light);margin-bottom:10px">いまの送料・原価のまま、目標利益率を達成するにはいくらで売ればいい？タップで価格に反映できるよ✨</p>
+  <div class="suggest-grid" id="suggest-grid">
+    <div class="suggest-item" style="opacity:.4"><div class="si-label">利益率20%</div><div class="si-price">—</div></div>
+    <div class="suggest-item" style="opacity:.4"><div class="si-label">利益率30%</div><div class="si-price">—</div></div>
+    <div class="suggest-item" style="opacity:.4"><div class="si-label">利益率40%</div><div class="si-price">—</div></div>
+  </div>
+  <div class="tips">
+    <h3>💡 価格設定のコツ</h3>
+    <ul>
+      <li>利益率20%以上を目安にすると安心！</li>
+      <li>「999円」「1,480円」など端数を工夫すると割安感が出るよ</li>
+      <li>同じ商品の相場をアプリの「売れた商品」で確認してから設定しよう</li>
+      <li>値下げ交渉を見越して10〜15%高めに出品するのが鉄則</li>
+    </ul>
+  </div>
+</div>
+
+<!-- TAB: 損益分岐 -->
+<div class="tab-pane" id="tab-breakeven">
+  <p style="font-size:.77rem;color:var(--text-light);margin-bottom:12px">損しないために必要な最低販売価格を逆算するよ。値下げ交渉のときの参考にしてね！</p>
+  <div class="be-row">
+    <span class="be-label">🔴 赤字にならない最低価格</span>
+    <span class="be-val" id="be-min">— 円</span>
+  </div>
+  <div class="be-row">
+    <span class="be-label">🟡 利益率20%を確保できる価格</span>
+    <span class="be-val" id="be-20">— 円</span>
+  </div>
+  <div class="be-row">
+    <span class="be-label">🟢 利益率30%を確保できる価格</span>
+    <span class="be-val" id="be-30">— 円</span>
+  </div>
+  <p class="be-note">※ 手数料10%・送料・原価をすべて含めて逆算しています。</p>
+</div>
+
+<!-- TAB: 個数計算 -->
+<div class="tab-pane" id="tab-bulk">
+  <p style="font-size:.77rem;color:var(--text-light);margin-bottom:10px">この商品を何個売ったら合計いくらになる？スライダーで個数を変えてみよう！</p>
+  <label>販売数: <strong id="bulk-count-label" style="color:var(--text);font-size:1rem">10</strong> 個</label>
+  <input type="range" id="bulk-slider" min="1" max="100" value="10" oninput="updateBulk()" />
+  <div class="bulk-display">
+    <div class="bd-sub">販売数</div>
+    <div class="bd-count" id="bd-count">10 個</div>
+    <div class="bd-sub" style="margin-top:8px">合計純利益</div>
+    <div class="bd-total" id="bd-total">販売価格を入力してね</div>
+    <div class="bd-sub" id="bd-per" style="margin-top:4px"></div>
+  </div>
+  <div class="tips">
+    <h3>💡 販売数を増やすコツ</h3>
+    <ul>
+      <li>同カテゴリの商品をまとめて出品すると効率アップ！</li>
+      <li>「まとめ買い割引」を設定して客単価を上げよう</li>
+      <li>リピーターを作るとコンスタントに稼ぎやすくなるよ</li>
+      <li>ハンドメイドや一点ものは利益率が高くなりやすい！</li>
+    </ul>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- 広告枠（下部） -->
+
+  <div class="ad-slot">
+    <!-- Google AdSense コードをここに貼り付けてください -->
+    <span>広告スペース（レスポンシブ）</span>
+  </div>
+
+<button class="btn-reset" onclick="resetAll()">🔄 リセットして最初から入力する</button>
+
+  <footer>
+    <p>※ 手数料はメルカリ標準の10%で計算しています。実際の数値は変わる場合があります。</p>
+    <p style="margin-top:4px">🌸 Happy selling! 毎日の出品がもっと楽しくなりますように 🌸</p>
+  </footer>
+
+</div>
+<script>
+  let currentProfit = 0, currentPrice = 0, currentShip = 0, currentCost = 0;
+
+function onShipChange() {
+const v = document.getElementById(‘shipping’).value;
+document.getElementById(‘customShipGroup’).style.display = v === ‘custom’ ? ‘block’ : ‘none’;
+calc();
+}
+
+function getShip() {
+const v = document.getElementById(‘shipping’).value;
+return v === ‘custom’
+? (parseFloat(document.getElementById(‘customShip’).value) || 0)
+: (parseFloat(v) || 0);
+}
+
+function fmt(n) { return ’¥ ’ + Math.round(n).toLocaleString(‘ja-JP’); }
+
+function calc() {
+currentPrice = parseFloat(document.getElementById(‘price’).value) || 0;
+currentCost  = parseFloat(document.getElementById(‘cost’).value)  || 0;
+currentShip  = getShip();
+
+```
+if (currentPrice <= 0) { clearResults(); return; }
+
+const fee     = currentPrice * 0.10;
+currentProfit = currentPrice - fee - currentShip - currentCost;
+const rate    = (currentProfit / currentPrice) * 100;
+
+setVal('r-price', fmt(currentPrice));
+setVal('r-fee',   '− ' + fmt(fee));
+setVal('r-ship',  '− ' + fmt(currentShip));
+
+const costRow = document.getElementById('r-cost-row');
+if (currentCost > 0) { costRow.style.display = 'flex'; setVal('r-cost','− ' + fmt(currentCost)); }
+else { costRow.style.display = 'none'; }
+
+const profitEl = document.getElementById('r-profit');
+profitEl.textContent = fmt(currentProfit);
+profitEl.classList.toggle('negative', currentProfit < 0);
+profitEl.classList.remove('pop'); void profitEl.offsetWidth; profitEl.classList.add('pop');
+
+setVal('r-rate', rate.toFixed(1) + ' %');
+document.getElementById('r-rate').style.color = rate >= 20 ? '#5BA880' : rate >= 0 ? '#C88B50' : '#E07090';
+document.getElementById('profit-bar').style.width = (Math.min(Math.max(rate,0),80)/80*100) + '%';
+
+// advice
+const ab = document.getElementById('advice-box');
+if (currentProfit < 0) {
+  ab.className = 'advice-box show bad';
+  ab.innerHTML = '⚠️ <strong>赤字です！</strong> 販売価格を上げるか、安い配送方法に変えてみよう。下の「損益分岐」タブで最低価格を確認してね。';
+} else if (rate < 10) {
+  ab.className = 'advice-box show warn';
+  ab.innerHTML = '😟 <strong>利益率が低め（' + rate.toFixed(1) + '%）</strong> — 値下げ交渉されると赤字になることも。「価格提案」タブで適正価格をチェックしよう！';
+} else if (rate < 20) {
+  ab.className = 'advice-box show warn';
+  ab.innerHTML = '🙂 利益率 <strong>' + rate.toFixed(1) + '%</strong> — まずまずです。送料を見直すともう少し上げられるかも！';
+} else {
+  ab.className = 'advice-box show good';
+  ab.innerHTML = '🎉 <strong>利益率 ' + rate.toFixed(1) + '% — 優秀です！</strong> このまま出品してOK。いい感じ✨';
+}
+
+updateSuggest();
+updateBreakeven();
+updateBulk();
+```
+
+}
+
+// 目標利益率から逆算した推奨販売価格
+function calcSuggestPrice(targetRate) {
+const denom = 1 - 0.10 - targetRate;
+if (denom <= 0) return null;
+return Math.ceil((currentCost + currentShip) / denom);
+}
+
+function updateSuggest() {
+const rates  = [0.20, 0.30, 0.40];
+const labels = [‘利益率20%’, ‘利益率30%’, ‘利益率40%’];
+const grid   = document.getElementById(‘suggest-grid’);
+grid.innerHTML = ‘’;
+
+```
+if (currentCost <= 0 && currentShip <= 0 && currentPrice <= 0) {
+  grid.innerHTML = '<p style="font-size:.77rem;color:var(--text-light);grid-column:1/-1;text-align:center;padding:14px 0">原価か送料を入力すると推奨価格が表示されます</p>';
+  return;
+}
+
+rates.forEach((r, i) => {
+  const p = calcSuggestPrice(r);
+  const profit = p ? Math.round(p - p * 0.10 - currentShip - currentCost) : null;
+  const item = document.createElement('div');
+  item.className = 'suggest-item';
+  if (p && profit !== null) {
+    const actualRate = (profit / p * 100).toFixed(1);
+    item.innerHTML = `<div class="si-label">${labels[i]}</div>
+      <div class="si-price">¥${Math.round(p).toLocaleString()}</div>
+      <div class="si-profit">利益 ¥${profit.toLocaleString()}</div>
+      <div class="si-rate">${actualRate}%</div>`;
+    item.title = 'タップでこの価格を反映';
+    item.onclick = () => { document.getElementById('price').value = Math.round(p); calc(); };
+  } else {
+    item.innerHTML = `<div class="si-label">${labels[i]}</div><div class="si-price">計算不可</div>`;
+    item.style.opacity = '.4'; item.style.cursor = 'default';
+  }
+  grid.appendChild(item);
+});
+```
+
+}
+
+function updateBreakeven() {
+function bePrice(targetRate) {
+const denom = 0.90 - targetRate;
+if (denom <= 0) return null;
+return Math.ceil((currentCost + currentShip) / denom);
+}
+const min = bePrice(0), p20 = bePrice(0.20), p30 = bePrice(0.30);
+document.getElementById(‘be-min’).textContent = min ? Math.round(min).toLocaleString() + ’ 円’ : ‘— 円’;
+document.getElementById(‘be-20’).textContent  = p20 ? Math.round(p20).toLocaleString() + ’ 円’ : ‘— 円’;
+document.getElementById(‘be-30’).textContent  = p30 ? Math.round(p30).toLocaleString() + ’ 円’ : ‘— 円’;
+}
+
+function updateBulk() {
+const n = parseInt(document.getElementById(‘bulk-slider’).value) || 1;
+document.getElementById(‘bulk-count-label’).textContent = n;
+document.getElementById(‘bd-count’).textContent = n + ’ 個’;
+if (currentPrice > 0) {
+const total = currentProfit * n;
+document.getElementById(‘bd-total’).textContent = ’¥ ’ + Math.round(total).toLocaleString(‘ja-JP’);
+document.getElementById(‘bd-total’).style.color = total >= 0 ? ‘#3A7A60’ : ‘#E07090’;
+document.getElementById(‘bd-per’).textContent = ’1個あたりの利益: ’ + fmt(currentProfit);
+} else {
+document.getElementById(‘bd-total’).textContent = ‘販売価格を入力してね’;
+document.getElementById(‘bd-total’).style.color = ‘#3A7A60’;
+document.getElementById(‘bd-per’).textContent = ‘’;
+}
+}
+
+function switchTab(name) {
+const names = [‘suggest’,‘breakeven’,‘bulk’];
+document.querySelectorAll(’.tab-btn’).forEach((b,i) => b.classList.toggle(‘active’, names[i] === name));
+document.querySelectorAll(’.tab-pane’).forEach(p => p.classList.remove(‘active’));
+document.getElementById(‘tab-’ + name).classList.add(‘active’);
+}
+
+function setVal(id, val) { const el = document.getElementById(id); if(el) el.textContent = val; }
+
+function clearResults() {
+currentProfit = 0; currentPrice = 0;
+[‘r-price’,‘r-fee’,‘r-ship’,‘r-cost’].forEach(id => setVal(id,‘¥ —’));
+setVal(‘r-rate’,’— %’);
+setVal(‘r-profit’,‘¥ —’);
+document.getElementById(‘r-profit’).classList.remove(‘negative’);
+document.getElementById(‘profit-bar’).style.width = ‘0%’;
+document.getElementById(‘advice-box’).className = ‘advice-box’;
+document.getElementById(‘be-min’).textContent = ‘— 円’;
+document.getElementById(‘be-20’).textContent  = ‘— 円’;
+document.getElementById(‘be-30’).textContent  = ‘— 円’;
+updateSuggest(); updateBulk();
+}
+
+function resetAll() {
+document.getElementById(‘price’).value = ‘’;
+document.getElementById(‘cost’).value  = ‘’;
+document.getElementById(‘shipping’).value = ‘0’;
+document.getElementById(‘customShip’).value = ‘’;
+document.getElementById(‘customShipGroup’).style.display = ‘none’;
+document.getElementById(‘bulk-slider’).value = 10;
+clearResults();
+}
+
+document.getElementById(‘bulk-slider’).addEventListener(‘input’, updateBulk);
+updateSuggest(); updateBreakeven(); updateBulk();
+</script>
+
+</body>
+</html>
