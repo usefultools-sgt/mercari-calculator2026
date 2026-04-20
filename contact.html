@@ -5,12 +5,101 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
   <title>お問い合わせ | フリマ送料診断・利益計算ツール 2026</title>
   <style>
-    /* 共通のデザインをここに記述（zip内のcontact.htmlの内容を貼り付け） */
+    :root {
+      --lavender: #C7B8EA;
+      --lav-soft: #E6E0F8;
+      --pink-accent: #FFD1DC;
+      --text: #5A5464;
+    }
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f9f8ff;
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+    h1 {
+      color: var(--lavender);
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--lav-soft);
+      border-radius: 10px;
+      box-sizing: border-box;
+      outline: none;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--lavender);
+    }
+    .btn-submit {
+      width: 100%;
+      background: var(--lavender);
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .footer-links {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.8rem;
+    }
+    .footer-links a {
+      color: var(--lavender);
+      text-decoration: none;
+      margin: 0 10px;
+    }
   </style>
 </head>
 <body>
-  <h1>お問い合わせ</h1>
-  <div id="formWrap">
+  <div class="container">
+    <h1>お問い合わせ</h1>
+    <div id="formWrap">
+      <p style="font-size: 0.8rem; text-align: center;">ツールへのご要望や不具合報告など、お気軽にお送りください。</p>
+      <div class="form-group">
+        <label>お名前</label>
+        <input type="text" placeholder="フリマ 太郎">
+      </div>
+      <div class="form-group">
+        <label>メールアドレス</label>
+        <input type="email" placeholder="example@mail.com">
+      </div>
+      <div class="form-group">
+        <label>内容</label>
+        <textarea rows="5" placeholder="お問い合わせ内容を入力してください"></textarea>
+      </div>
+      <button class="btn-submit">送信する（デモ）</button>
     </div>
+
+    <div class="footer-links">
+      <a href="index.html">← ツールに戻る</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+    </div>
+  </div>
 </body>
 </html>
