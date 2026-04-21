@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
   <meta charset="UTF-8"/>
@@ -74,7 +73,6 @@ body::after{width:260px;height:260px;background:radial-gradient(circle,var(--lav
 .card ul,.card ol{padding-left:1.2em;margin-top:6px}
 .card li{margin-bottom:4px}
 .card a{color:#7B74C9;text-decoration:underline}
-.section-date{font-size:.7rem;color:var(--text-light);text-align:right;margin-bottom:18px}
 .highlight{
   background:linear-gradient(135deg,rgba(174,217,245,.25),rgba(199,184,234,.2));
   border-left:3px solid var(--lav);border-radius:0 10px 10px 0;
@@ -82,12 +80,44 @@ body::after{width:260px;height:260px;background:radial-gradient(circle,var(--lav
 }
 .page-footer{text-align:center;font-size:.7rem;color:var(--text-light);
   margin-top:28px;opacity:.7;line-height:2}
+
+/* フォーム用スタイル */
+.field-group{margin-bottom:14px}
+.field-group label{display:block;font-size:.8rem;font-weight:700;color:var(--text-light);margin-bottom:5px}
+.req{background:linear-gradient(135deg,#FFB7C5,#C7B8EA);color:#fff;font-size:.62rem;padding:1px 6px;border-radius:6px;margin-left:5px;font-weight:700}
+.field-group input[type="text"],
+.field-group input[type="email"],
+.field-group select,
+.field-group textarea{
+  width:100%;padding:12px 14px;border:2px solid rgba(199,184,234,.35);border-radius:13px;
+  font-family:'Zen Maru Gothic',sans-serif;font-size:.88rem;color:var(--text);
+  background:rgba(255,255,255,.7);outline:none;resize:vertical;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus{
+  border-color:var(--lav);background:#fff;
+  box-shadow:0 0 0 4px rgba(199,184,234,.25);
+}
+.privacy-check{margin-top:16px}
+.checkbox-label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.8rem;color:var(--text)}
+.checkbox-label input[type="checkbox"]{width:18px;height:18px;accent-color:var(--lav);cursor:pointer;flex-shrink:0}
+.btn-submit{
+  width:100%;margin-top:16px;padding:15px;border:none;border-radius:16px;
+  background:linear-gradient(135deg,#AED9F5,#C7B8EA,#FFB7C5);
+  font-family:'Zen Maru Gothic',sans-serif;font-size:1rem;font-weight:700;
+  color:#fff;cursor:pointer;text-shadow:0 1px 3px rgba(100,80,140,.25);
+  box-shadow:0 5px 18px rgba(160,120,180,.35);
+  transition:transform .15s,box-shadow .15s;
+}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(160,120,180,.45)}
 </style>
 </head>
 <body>
 <nav class="page-nav">
   <span class="nav-logo">📦🌸 フリマ便利ツール 2026</span>
-  <a class="nav-back" href="furima-all-in-one-2026.html">← ツールに戻る</a>
+  <a class="nav-back" href="index.html">← ツールに戻る</a>
 </nav>
 <div class="container">
   <div class="page-header">
@@ -109,45 +139,45 @@ body::after{width:260px;height:260px;background:radial-gradient(circle,var(--lav
 
   <div class="card" id="formCard">
     <h2 data-icon="📝">お問い合わせフォーム</h2>
-    <div id="formWrap">
+    
+    <form id="formWrap" action="https://formspree.io/f/xykldjjz" method="POST">
       <div class="field-group">
         <label for="f-name">お名前 <span class="req">必須</span></label>
-        <input type="text" id="f-name" placeholder="例：山田 花子" autocomplete="name"/>
+        <input type="text" id="f-name" name="お名前" placeholder="例：山田 花子" required autocomplete="name"/>
       </div>
+      
       <div class="field-group">
         <label for="f-email">メールアドレス <span class="req">必須</span></label>
-        <input type="email" id="f-email" placeholder="例：hanako@example.com" autocomplete="email"/>
+        <input type="email" id="f-email" name="返信先" placeholder="例：hanako@example.com" required autocomplete="email"/>
       </div>
+      
       <div class="field-group">
         <label for="f-type">お問い合わせ種別</label>
-        <select id="f-type">
+        <select id="f-type" name="種別">
           <option value="">選択してください</option>
-          <option value="bug">送料・手数料の誤り報告</option>
-          <option value="request">機能リクエスト</option>
-          <option value="display">表示・動作の不具合</option>
-          <option value="media">メディア・提携のご相談</option>
-          <option value="other">その他</option>
+          <option value="誤り報告">送料・手数料の誤り報告</option>
+          <option value="機能リクエスト">機能リクエスト</option>
+          <option value="不具合">表示・動作の不具合</option>
+          <option value="相談">メディア・提携のご相談</option>
+          <option value="その他">その他</option>
         </select>
       </div>
+      
       <div class="field-group">
         <label for="f-msg">お問い合わせ内容 <span class="req">必須</span></label>
-        <textarea id="f-msg" rows="5" placeholder="詳しい内容をご記入ください&#10;&#10;（例）ゆうパケットプラスの料金が実際と違います。現在の表示：455円 → 正しい料金：XXX円"></textarea>
+        <textarea id="f-msg" name="内容" rows="5" placeholder="詳しい内容をご記入ください" required></textarea>
       </div>
+      
       <div class="field-group privacy-check">
         <label class="checkbox-label">
-          <input type="checkbox" id="f-agree"/>
+          <input type="checkbox" id="f-agree" name="ポリシー同意" required/>
           <span><a href="privacy.html" target="_blank">プライバシーポリシー</a>に同意する</span>
         </label>
       </div>
-      <button class="btn-submit" onclick="submitForm()">送信する 📨</button>
+      
+      <button type="submit" class="btn-submit">送信する 📨</button>
+    </form>
     </div>
-    <div id="formSuccess" class="success-msg" style="display:none">
-      <span class="success-emoji">🎉</span>
-      <p class="success-title">送信が完了しました！</p>
-      <p class="success-sub">お問い合わせありがとうございます。内容を確認のうえ、3〜5営業日以内にご返信いたします。</p>
-      <button class="btn-back" onclick="resetForm()">もう一度送る</button>
-    </div>
-  </div>
 
   <div class="card">
     <h2 data-icon="⏰">返信について</h2>
@@ -156,90 +186,13 @@ body::after{width:260px;height:260px;background:radial-gradient(circle,var(--lav
   </div>
 </div>
 
-<style>
-.field-group{margin-bottom:14px}
-.field-group label{display:block;font-size:.8rem;font-weight:700;color:var(--text-light);margin-bottom:5px}
-.req{background:linear-gradient(135deg,#FFB7C5,#C7B8EA);color:#fff;font-size:.62rem;padding:1px 6px;border-radius:6px;margin-left:5px;font-weight:700}
-.field-group input[type="text"],
-.field-group input[type="email"],
-.field-group select,
-.field-group textarea{
-  width:100%;padding:12px 14px;border:2px solid rgba(199,184,234,.35);border-radius:13px;
-  font-family:'Zen Maru Gothic',sans-serif;font-size:.88rem;color:var(--text);
-  background:rgba(255,255,255,.7);outline:none;resize:vertical;
-  transition:border-color .2s,box-shadow .2s,background .2s;
-}
-.field-group input:focus,
-.field-group select:focus,
-.field-group textarea:focus{
-  border-color:var(--lav);background:#fff;
-  box-shadow:0 0 0 4px rgba(199,184,234,.25);
-}
-.field-group input.error,
-.field-group textarea.error{border-color:#FFB7C5;box-shadow:0 0 0 3px rgba(255,183,197,.2)}
-.privacy-check{margin-top:16px}
-.checkbox-label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.8rem;color:var(--text)}
-.checkbox-label input[type="checkbox"]{width:18px;height:18px;accent-color:var(--lav);cursor:pointer;flex-shrink:0}
-.btn-submit{
-  width:100%;margin-top:16px;padding:15px;border:none;border-radius:16px;
-  background:linear-gradient(135deg,#AED9F5,#C7B8EA,#FFB7C5);
-  font-family:'Zen Maru Gothic',sans-serif;font-size:1rem;font-weight:700;
-  color:#fff;cursor:pointer;text-shadow:0 1px 3px rgba(100,80,140,.25);
-  box-shadow:0 5px 18px rgba(160,120,180,.35);
-  transition:transform .15s,box-shadow .15s;
-}
-.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(160,120,180,.45)}
-.btn-submit:active{transform:scale(.98)}
-.success-msg{text-align:center;padding:20px 10px}
-.success-emoji{font-size:48px;display:block;margin-bottom:12px;animation:bounce 1.5s ease infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.success-title{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:6px}
-.success-sub{font-size:.8rem;color:var(--text-light);line-height:1.7;margin-bottom:16px}
-.btn-back{
-  padding:10px 24px;border:2px solid var(--lav);border-radius:12px;
-  background:transparent;font-family:'Zen Maru Gothic',sans-serif;
-  font-size:.85rem;font-weight:700;color:var(--text-light);cursor:pointer;
-  transition:all .2s;
-}
-.btn-back:hover{background:var(--lav-soft);color:var(--text)}
-</style>
-
-<script>
-function submitForm(){
-  const name  = document.getElementById('f-name');
-  const email = document.getElementById('f-email');
-  const msg   = document.getElementById('f-msg');
-  const agree = document.getElementById('f-agree');
-  let ok = true;
-  [name, email, msg].forEach(el => {
-    el.classList.remove('error');
-    if(!el.value.trim()){ el.classList.add('error'); ok=false; }
-  });
-  if(!agree.checked){ alert('プライバシーポリシーへの同意が必要です'); ok=false; }
-  if(!ok) return;
-  // 実際の送信処理はFormspree等のサービスに差し替えてください
-  document.getElementById('formWrap').style.display='none';
-  document.getElementById('formSuccess').style.display='block';
-}
-function resetForm(){
-  ['f-name','f-email','f-msg'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.value=''; el.classList.remove('error');
-  });
-  document.getElementById('f-agree').checked=false;
-  document.getElementById('f-type').value='';
-  document.getElementById('formWrap').style.display='block';
-  document.getElementById('formSuccess').style.display='none';
-}
-</script>
-
-  <footer class="page-footer">
-    <p>© 2026 フリマ便利ツール 2026　|　
-      <a href="privacy.html" style="color:var(--text-light)">プライバシーポリシー</a> ·
-      <a href="terms.html" style="color:var(--text-light)">利用規約</a> ·
-      <a href="contact.html" style="color:var(--text-light)">お問い合わせ</a>
-    </p>
-    <p style="margin-top:4px">本ツールはメルカリ・ラクマ・PayPayフリマ各社とは無関係の個人運営ツールです</p>
-  </footer>
+<footer class="page-footer">
+  <p>© 2026 フリマ便利ツール 2026　|　
+    <a href="privacy.html" style="color:var(--text-light)">プライバシーポリシー</a> ·
+    <a href="terms.html" style="color:var(--text-light)">利用規約</a> ·
+    <a href="contact.html" style="color:var(--text-light)">お問い合わせ</a>
+  </p>
+  <p style="margin-top:4px">本ツールはメルカリ・ラクマ・PayPayフリマ各社とは無関係の個人運営ツールです</p>
+</footer>
 </body>
 </html>
